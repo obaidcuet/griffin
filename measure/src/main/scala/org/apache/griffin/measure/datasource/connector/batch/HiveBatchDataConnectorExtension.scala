@@ -33,7 +33,7 @@ import org.apache.griffin.measure.utils.ParamUtil._
  * instead of pulling all data and processes locally.
  */
 
-case class HiveBatchProfileDataConnector(
+case class HiveBatchDataConnectorExtension(
                                    @transient sparkSession: SparkSession,
                                    dcParam: DataConnectorParam,
                                    timestampStorage: TimestampStorage)
@@ -54,7 +54,6 @@ case class HiveBatchProfileDataConnector(
   val groupBy: String = config.getString(GroupBy, "")
 
   val concreteTableName = s"$database.$tableName"
-  val wheres: Array[String] = whereString.split(",").map(_.trim).filter(_.nonEmpty)
 
   def data(ms: Long): (Option[DataFrame], TimeRange) = {
     val dfOpt = {
@@ -70,13 +69,14 @@ case class HiveBatchProfileDataConnector(
   }
 
   private def dataSql(): String = {
-    val tableClause = s"SELECT $selectString FROM $concreteTableName"
-    if (wheres.length > 0) {
-      val clauses = wheres.map { w =>
-        s"$tableClause WHERE $w"
-      }
-      clauses.mkString(" UNION ALL ")
-    } else tableClause
+    var tableClause = s"SELECT $selectString FROM $concreteTableName"
+    if (whereString.length > 0) {
+      tableClause = s"$tableClause WHERE $whereString"
+    }
+    if (groupBy.length > 0) {
+      tableClause = s"$tableClause group by $groupBy"
+    }
+    tableClause
   }
 
 }

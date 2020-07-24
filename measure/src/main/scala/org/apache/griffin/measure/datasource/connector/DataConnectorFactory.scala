@@ -36,6 +36,7 @@ object DataConnectorFactory extends Loggable {
   @deprecated val TextDirRegex: Regex = """^(?i)text-dir$""".r
 
   val HiveRegex: Regex = """^(?i)hive$""".r
+  val HiveExtRegex: Regex = """^(?i)hive-ext$""".r
   val FileRegex: Regex = """^(?i)file$""".r
   val KafkaRegex: Regex = """^(?i)kafka$""".r
   val JDBCRegex: Regex = """^(?i)jdbc$""".r
@@ -61,6 +62,7 @@ object DataConnectorFactory extends Loggable {
     Try {
       conType match {
         case HiveRegex() => HiveBatchDataConnector(sparkSession, dcParam, tmstCache)
+        case HiveExtRegex() => HiveBatchDataConnectorExtension(sparkSession, dcParam, tmstCache)
         case AvroRegex() => AvroBatchDataConnector(sparkSession, dcParam, tmstCache)
         case FileRegex() => FileBasedDataConnector(sparkSession, dcParam, tmstCache)
         case TextDirRegex() => TextDirBatchDataConnector(sparkSession, dcParam, tmstCache)
