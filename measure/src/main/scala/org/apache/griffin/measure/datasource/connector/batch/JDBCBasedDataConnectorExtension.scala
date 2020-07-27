@@ -48,13 +48,12 @@ import org.apache.griffin.measure.utils.ParamUtil._
  *  - `where` is None
  */
 case class JDBCBasedDataConnectorExtension(
-                                            @transient sparkSession: SparkSession,
-                                            dcParam: DataConnectorParam,
-                                            timestampStorage: TimestampStorage)
-  extends BatchDataConnector {
+    @transient sparkSession: SparkSession,
+    dcParam: DataConnectorParam,
+    timestampStorage: TimestampStorage)
+    extends BatchDataConnector {
 
   import JDBCBasedDataConnectorExtension._
-
   val config: Map[String, Any] = dcParam.getConfig
   val database: String = config.getString(Database, DefaultDatabase)
   val tableName: String = config.getString(TableName, EmptyString)
