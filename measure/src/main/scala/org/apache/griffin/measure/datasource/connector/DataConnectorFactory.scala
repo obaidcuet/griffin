@@ -40,6 +40,7 @@ object DataConnectorFactory extends Loggable {
   val FileRegex: Regex = """^(?i)file$""".r
   val KafkaRegex: Regex = """^(?i)kafka$""".r
   val JDBCRegex: Regex = """^(?i)jdbc$""".r
+  val JDBCExtRegex: Regex = """^(?i)jdbc-ext$""".r
   val CustomRegex: Regex = """^(?i)custom$""".r
   val ElasticSearchRegex: Regex = """^(?i)elasticsearch$""".r
 
@@ -77,6 +78,7 @@ object DataConnectorFactory extends Loggable {
             tmstCache,
             streamingCacheClientOpt)
         case JDBCRegex() => JDBCBasedDataConnector(sparkSession, dcParam, tmstCache)
+        case JDBCExtRegex() => JDBCBasedDataConnectorExtension(sparkSession, dcParam, tmstCache)
         case _ => throw new Exception("connector creation error!")
       }
     }
