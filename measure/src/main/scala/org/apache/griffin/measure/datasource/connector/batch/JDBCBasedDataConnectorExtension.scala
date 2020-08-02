@@ -47,6 +47,10 @@ import org.apache.griffin.measure.utils.ParamUtil._
  *  - `driver` is com.mysql.jdbc.Driver,
  *  - `where` is None
  */
+/**
+ * The difference between this and JDBCBasedDataConnector is, this will aggregate data from the data source
+ * instead of pulling all data and processes locally.
+ */
 case class JDBCBasedDataConnectorExtension(
     @transient sparkSession: SparkSession,
     dcParam: DataConnectorParam,
